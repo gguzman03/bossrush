@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/play_session/pause_screen.dart';
+import 'package:basic/settings/reset_progress_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -75,13 +77,54 @@ final router = GoRouter(
                     ),
                   );
                 },
+              ),
+              //new page: lose
+              GoRoute(
+                path: 'lost',
+                redirect: (context, state) {
+                  if (state.extra == null) {
+                    // Trying to navigate to a win screen without any data.
+                    // Possibly by using the browser's back button.
+                    return '/';
+                  }
+
+                  // Otherwise, do not redirect.
+                  return null;
+                },
+                pageBuilder: (context, state) {
+                  final map = state.extra! as Map<String, dynamic>;
+                  final score = map['score'] as Score;
+
+                  return buildMyTransition<void>(
+                    key: const ValueKey('lost'),
+                    color: context.watch<Palette>().backgroundPlaySession,
+                    child: WinGameScreen(
+                      score: score,
+                      key: const Key('lose game'),
+                    ),
+                  );
+                },
               )
             ]),
+        //settings page
         GoRoute(
-          path: 'settings',
-          builder: (context, state) =>
-              const SettingsScreen(key: Key('settings')),
-        ),
+            path: 'settings',
+            builder: (context, state) =>
+                const SettingsScreen(key: Key('settings')),
+
+            //implements new page: reset progress
+            //this page is meant to be accessed only from the settings menu
+            routes: [
+              GoRoute(
+                  path: 'reset_progress',
+                  builder: (context, state) =>
+                      const ResetProgressScreen(key: Key('reset_progress')))
+            ]),
+
+        //new page: Pause
+        GoRoute(
+            path: 'pause',
+            builder: (context, state) => const PauseScreen(key: Key('pause')))
       ],
     ),
   ],

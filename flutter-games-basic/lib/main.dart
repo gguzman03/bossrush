@@ -24,7 +24,7 @@ void main() async {
     dev.log(
       record.message,
       time: record.time,
-      level: record.level.value,
+      //level: record.level.value,
       name: record.loggerName,
     );
   });
@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
           final palette = context.watch<Palette>();
 
           return MaterialApp.router(
-            title: 'My Flutter Game',
+            title: 'Boss Rush',
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,
