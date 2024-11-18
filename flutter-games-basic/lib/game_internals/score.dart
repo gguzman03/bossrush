@@ -2,23 +2,29 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Encapsulates a score and the arithmetic to compute it.
+// Encapsulates a score and the arithmetic to compute it.
+
+// Adjusted to not need level
 class Score {
   final int score;
 
   final Duration duration;
 
-  final int level;
+  //final int level;
 
-  factory Score(int level, int difficulty, Duration duration) {
+  //factory Score(int level, int difficulty, Duration duration) {
+  factory Score(Duration duration) {
     // The higher the difficulty, the higher the score.
-    var score = difficulty;
+    var score = 0;
     // The lower the time to beat the level, the higher the score.
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    return Score._(score, duration, level);
+    // return Score._(score, duration, level);
+    return Score._(score, duration);
   }
 
-  const Score._(this.score, this.duration, this.level);
+  //const Score._(this.score, this.duration, this.level);
+
+  const Score._(this.score, this.duration);
 
   String get formattedTime {
     final buf = StringBuffer();
@@ -41,5 +47,7 @@ class Score {
   }
 
   @override
-  String toString() => 'Score<$score,$formattedTime,$level>';
+  //String toString() => 'Score<$score,$formattedTime,$level>';
+
+  String toString() => 'Score<$score,$formattedTime>';
 }

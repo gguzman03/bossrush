@@ -9,14 +9,15 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'game_internals/score.dart';
-import 'level_selection/level_selection_screen.dart';
-import 'level_selection/levels.dart';
+//import 'level_selection/level_selection_screen.dart';
+//import 'level_selection/levels.dart';
 import 'main_menu/main_menu_screen.dart';
 import 'play_session/play_session_screen.dart';
 import 'settings/settings_screen.dart';
 import 'style/my_transition.dart';
 import 'style/palette.dart';
 import 'win_game/win_game_screen.dart';
+import 'win_game/lose_game_screen.dart';
 
 /// The router describes the game's navigational hierarchy, from the main
 /// screen through settings screens all the way to each individual level.
@@ -31,7 +32,7 @@ final router = GoRouter(
             pageBuilder: (context, state) => buildMyTransition<void>(
                   key: const ValueKey('play'),
                   color: context.watch<Palette>().backgroundLevelSelection,
-                  child: const LevelSelectionScreen(
+                  child: const PlaySessionScreen(
                     key: Key('level selection'),
                   ),
                 ),
@@ -39,15 +40,15 @@ final router = GoRouter(
               GoRoute(
                 path: 'session/:level',
                 pageBuilder: (context, state) {
-                  final levelNumber = int.parse(state.pathParameters['level']!);
-                  final level =
-                      gameLevels.singleWhere((e) => e.number == levelNumber);
+                  // final levelNumber = int.parse(state.pathParameters['level']!);
+                  // final level =
+                  //     gameLevels.singleWhere((e) => e.number == levelNumber);
                   return buildMyTransition<void>(
                     key: const ValueKey('level'),
                     color: context.watch<Palette>().backgroundPlaySession,
                     child: PlaySessionScreen(
-                      level,
-                      key: const Key('play session'),
+                      //level,
+                      key: const Key('play_session'),
                     ),
                   );
                 },
@@ -98,7 +99,7 @@ final router = GoRouter(
                   return buildMyTransition<void>(
                     key: const ValueKey('lost'),
                     color: context.watch<Palette>().backgroundPlaySession,
-                    child: WinGameScreen(
+                    child: LoseGameScreen(
                       score: score,
                       key: const Key('lose game'),
                     ),

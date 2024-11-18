@@ -4,6 +4,7 @@
 
 import 'dart:developer' as dev;
 
+import 'package:flame/flame.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,12 +32,14 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   // Put game into full screen mode on mobile devices.
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  // Lock the game to portrait mode on mobile devices.
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // // Lock the game to portrait mode on mobile devices.
+  // await SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
+  Flame.device.fullScreen();
+  Flame.device.setLandscape();
 
   runApp(MyApp());
 }

@@ -11,10 +11,10 @@ import '../style/my_button.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
-class WinGameScreen extends StatelessWidget {
+class LoseGameScreen extends StatelessWidget {
   final Score score;
 
-  const WinGameScreen({
+  const LoseGameScreen({
     super.key,
     required this.score,
   });
@@ -49,12 +49,27 @@ class WinGameScreen extends StatelessWidget {
             // ),
           ],
         ),
-        rectangularMenuArea: MyButton(
-          onPressed: () {
-            GoRouter.of(context).go('/play');
-          },
-          child: const Text('Continue'),
-        ),
+        rectangularMenuArea: 
+              Expanded(       
+                child: Row(
+                  children: [
+                    MyButton(
+                      onPressed: () {
+                        GoRouter.of(context).go('/play/session/1');
+                      },
+                      child: const Text('Try Again'),
+                    ),
+                    MyButton(
+                      onPressed: () {
+                          while (GoRouter.of(context).canPop()) {
+                            GoRouter.of(context).pop();
+                          }
+                      },
+                      child: const Text('Quit'),
+                    ),                
+            ],
+          ),
+        )
       ),
     );
   }

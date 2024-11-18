@@ -4,6 +4,8 @@
 
 import 'dart:async';
 
+import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -13,12 +15,12 @@ import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../game_internals/level_state.dart';
 import '../game_internals/score.dart';
-import '../level_selection/levels.dart';
+//import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/my_button.dart';
 import '../style/palette.dart';
-import 'game_widget.dart';
+import 'boss_rush.dart';
 
 /// This widget defines the entirety of the screen that the player sees when
 /// they are playing a level.
@@ -26,9 +28,10 @@ import 'game_widget.dart';
 /// It is a stateful widget because it manages some state of its own,
 /// such as whether the game is in a "celebration" state.
 class PlaySessionScreen extends StatefulWidget {
-  final GameLevel level;
+  //final GameLevel level;
 
-  const PlaySessionScreen(this.level, {super.key});
+  //const PlaySessionScreen(this.level, {super.key});
+  const PlaySessionScreen({super.key});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -55,16 +58,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    BossRush game = BossRush();
 
     return MultiProvider(
       providers: [
-        Provider.value(value: widget.level),
+        //Provider.value(value: widget.level),
         // Create and provide the [LevelState] object that will be used
         // by widgets below this one in the widget tree.
         ChangeNotifierProvider(
           create: (context) => LevelState(
-            goal: widget.level.difficulty,
+            //goal: widget.level.difficulty,
             onWin: _playerWon,
+            onLoss: _playerLost
           ),
         ),
       ],
@@ -79,34 +84,32 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           body: Stack(
             children: [
               // This is the main layout of the play session screen,
-              // with a settings button on top, the actual play area
-              // in the middle, and a back button at the bottom.
+              // with a pause button on top and actual play area
+              // below
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  //place the pause functionality here
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: InkResponse(
-                      onTap: () => GoRouter.of(context).push('/settings'),
-                      child: Image.asset(
-                        'assets/images/settings.png',
-                        semanticLabel: 'Settings',
-                      ),
-                    ),
-                  ),
+                      alignment: Alignment.centerRight,
+                      child: InkResponse(
+                          onTap: () => GoRouter.of(context).push('/pause'),
+                          child: Image.asset('assets/images/pause.png',
+                              semanticLabel: 'Pause'))),
                   const Spacer(),
-                  const Expanded(
+                  Expanded(
                     // The actual UI of the game.
-                    child: GameWidget(),
+                    child: GameWidget(game: kDebugMode ? BossRush() : game),
                   ),
                   const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MyButton(
-                      onPressed: () => GoRouter.of(context).go('/play'),
-                      child: const Text('Back'),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: MyButton(
+                  //     onPressed: () => GoRouter.of(context).go('/play'),
+                  //     child: const Text('Back'),
+                  //   ),
+                  // ),
                 ],
               ),
               // This is the confetti animation that is overlaid on top of the
@@ -129,16 +132,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   Future<void> _playerWon() async {
-    _log.info('Level ${widget.level.number} won');
+    _log.info('You win!');
 
     final score = Score(
-      widget.level.number,
-      widget.level.difficulty,
+      //widget.level.number,
+      // widget.level.difficulty,
       DateTime.now().difference(_startOfPlay),
     );
 
     final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(widget.level.number);
+    //playerProgress.setLevelReached(widget.level.number);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);
@@ -156,5 +159,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     if (!mounted) return;
 
     GoRouter.of(context).go('/play/won', extra: {'score': score});
+  }  
+  Future<void> _playerLost() async {
+    final score = Score(
+      //widget.level.number,
+      // widget.level.difficulty,
+      DateTime.now().difference(_startOfPlay),
+    );
+    _log.info('Level lost...');
+    GoRouter.of(context).go('/play/lost', extra: {'score': score});
   }
 }

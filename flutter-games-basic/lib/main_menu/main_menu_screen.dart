@@ -28,8 +28,10 @@ class MainMenuScreen extends StatelessWidget {
         squarishMainArea: Center(
           child: Transform.rotate(
             angle: -0.1,
+            //TODO: realign here to comply with the wireframe
+            //TODO: find a way to implement images
             child: const Text(
-              'Flutter Game Template!',
+              'Boss Rush',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Permanent Marker',
@@ -45,12 +47,14 @@ class MainMenuScreen extends StatelessWidget {
             MyButton(
               onPressed: () {
                 audioController.playSfx(SfxType.buttonTap);
+                //goes to game
                 GoRouter.of(context).go('/play');
               },
               child: const Text('Play'),
             ),
             _gap,
             MyButton(
+              //goes to settings
               onPressed: () => GoRouter.of(context).push('/settings'),
               child: const Text('Settings'),
             ),

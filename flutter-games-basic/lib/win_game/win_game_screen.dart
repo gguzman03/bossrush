@@ -49,12 +49,27 @@ class WinGameScreen extends StatelessWidget {
             ),
           ],
         ),
-        rectangularMenuArea: MyButton(
-          onPressed: () {
-            GoRouter.of(context).go('/play');
-          },
-          child: const Text('Continue'),
-        ),
+        rectangularMenuArea: 
+        Expanded(
+          child: Row(children: [
+              MyButton(
+                onPressed: () {
+                  //FIXME: reset the game here
+                  GoRouter.of(context).go('/play/session/1');
+                },
+                child: const Text('Play Again'),
+              ),
+
+              MyButton(
+                onPressed: () {
+                  while (GoRouter.of(context).canPop()) {
+                      GoRouter.of(context).pop();
+                    }
+                },
+                child: const Text("Home"))
+            ],)
+
+        )
       ),
     );
   }
