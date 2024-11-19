@@ -35,6 +35,9 @@ flutter:
     - assets/images/
     - assets/music/
     - assets/sfx/
+    - assets/tiles/
+    - assets/images/terrains/test-terrain.png
+    
 
   fonts:
     - family: Permanent Marker
