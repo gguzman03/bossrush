@@ -50,9 +50,21 @@ import '../level_selection/boss_map.dart';
 //   }
 //}
 
+
+//TODO: implement a score notifier
 class BossRush extends FlameGame{
   // This CameraComponent object, as opposed to being a part of the Camera package, 
   // comes from the Flame package to actually display the game.
+
+  //TODO: adjust the following statement for current weather
+
+
+  
+
+  @override
+  Color backgroundColor() => const Color.fromARGB(255, 0, 200, 255);
+
+  //stuff to add to the game
   late final CameraComponent cameraComponent;
   final bossMap = BossMap();
 
@@ -60,9 +72,9 @@ class BossRush extends FlameGame{
 
     //recommended camera resolution: 640x360
     cameraComponent = CameraComponent.withFixedResolution(world: bossMap, width: 640, height: 360);
-    
-    //adjust camera anchor so that the level map begins generating from the top left
 
+  
+    //adjust camera anchor so that the level map begins generating from the top left
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
 
     //stuff to add, including the camera
