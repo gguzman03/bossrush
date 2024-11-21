@@ -36,7 +36,8 @@ flutter:
     - assets/music/
     - assets/sfx/
     - assets/tiles/
-    - assets/images/terrains/test-terrain.png
+    - assets/images/terrains/
+    - assets/images/player_sprites/lil_dude/lil-dude-idle.png
     
 
   fonts:
