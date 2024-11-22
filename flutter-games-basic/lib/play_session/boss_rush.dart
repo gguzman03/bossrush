@@ -5,8 +5,12 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import "package:weather/weather.dart";
+import 'package:location/location.dart';
 
 import 'package:flame/game.dart';
 
@@ -50,16 +54,12 @@ import '../level_selection/boss_map.dart';
 //   }
 //}
 
-
 //TODO: implement a score notifier
-class BossRush extends FlameGame{
-  // This CameraComponent object, as opposed to being a part of the Camera package, 
+class BossRush extends FlameGame with HasKeyboardHandlerComponents{
+  // This CameraComponent object, as opposed to being a part of the Camera package,
   // comes from the Flame package to actually display the game.
 
-  //TODO: adjust the following statement for current weather
-
-
-  
+  BossRush();
 
   @override
   Color backgroundColor() => const Color.fromARGB(255, 0, 200, 255);
@@ -68,12 +68,11 @@ class BossRush extends FlameGame{
   late final CameraComponent cameraComponent;
   final bossMap = BossMap();
 
-  FutureOr<void> onLoad(){
-
+  FutureOr<void> onLoad() {
     //recommended camera resolution: 640x360
-    cameraComponent = CameraComponent.withFixedResolution(world: bossMap, width: 640, height: 360);
+    cameraComponent = CameraComponent.withFixedResolution(
+        world: bossMap, width: 640, height: 360);
 
-  
     //adjust camera anchor so that the level map begins generating from the top left
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
 
@@ -82,6 +81,5 @@ class BossRush extends FlameGame{
     addAll(components);
     return super.onLoad();
   }
-
 
 }

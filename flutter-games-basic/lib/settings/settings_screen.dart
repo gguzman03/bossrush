@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../player_progress/player_progress.dart';
+//import '../player_progress/player_progress.dart';
+//import '../settings/reset_progress.dart';
 import '../style/my_button.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
@@ -58,17 +59,13 @@ class SettingsScreen extends StatelessWidget {
                 onSelected: settings.toggleMusicOn,
               ),
             ),
+            //TODO: check this out and implement Reset Progress? dialog
             _SettingsLine(
-              'Reset progress',
+              'Reset Progress',
               const Icon(Icons.delete),
               onSelected: () {
-                context.read<PlayerProgress>().reset();
-
-                final messenger = ScaffoldMessenger.of(context);
-                messenger.showSnackBar(
-                  const SnackBar(
-                      content: Text('Player progress has been reset.')),
-                );
+                //Go to Reset Progress page
+                GoRouter.of(context).go("/settings/reset_progress");
               },
             ),
             _gap,

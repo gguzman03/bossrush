@@ -20,6 +20,10 @@ dependencies:
   shared_preferences: ^2.2.3
   flame: ^1.21.0
   flame_tiled: ^1.21.0
+  weather: ^3.1.1
+  location: ^7.0.1
+  http: ^1.2.2
+  nes_ui: ^0.20.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0
@@ -38,6 +42,7 @@ flutter:
     - assets/tiles/
     - assets/images/terrains/
     - assets/images/player_sprites/lil_dude/lil-dude-idle.png
+    - assets/images/player_sprites/lil_dude/lil-dude-running.png
     
 
   fonts:

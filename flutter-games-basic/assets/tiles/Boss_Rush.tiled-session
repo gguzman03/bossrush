@@ -7,6 +7,17 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "boss-rush-map.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 276.5,
+                "y": 338.5
+            }
+        }
     },
     "last.imagePath": "C:/Users/Gabriel/Boss_Rush/bossrush/flutter-games-basic/assets/images/terrains",
     "map.height": 23,

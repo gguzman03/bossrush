@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:weather/weather.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
@@ -12,6 +13,9 @@ import '../settings/settings.dart';
 import '../style/my_button.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
+
+import "../game_internals/weather_manager.dart";
+
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -21,6 +25,12 @@ class MainMenuScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final settingsController = context.watch<SettingsController>();
     final audioController = context.watch<AudioController>();
+
+    final api = "5a75920ab7bd192bf92a40977af3b9f3";
+
+    var wm = WeatherManager(api);
+    var weather = wm.getWeather();
+
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -74,6 +84,23 @@ class MainMenuScreen extends StatelessWidget {
             _gap,
             const Text('Music by Mr Smith'),
             _gap,
+            FutureBuilder<String>(
+              future: weather, 
+              builder: (context, snapshot){
+                  while (snapshot.connectionState != ConnectionState.done){
+                         return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError){
+                    return Text("Error in fetching data: ${snapshot.error}");
+                  }
+                  if (snapshot.hasData){
+                      var currWeather = snapshot.data as String;
+                      return Text("Current Weather: $currWeather");
+                  }
+                  return const Text("Snapshot has no data for weather...");
+              }
+              
+              )
           ],
         ),
       ),
