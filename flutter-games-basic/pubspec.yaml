@@ -40,9 +40,11 @@ flutter:
     - assets/music/
     - assets/sfx/
     - assets/tiles/
+    - assets/images/joystick_parts/
     - assets/images/terrains/
     - assets/images/player_sprites/lil_dude/lil-dude-idle.png
     - assets/images/player_sprites/lil_dude/lil-dude-running.png
+    - assets/images/item/item.png
     
 
   fonts:

@@ -101,7 +101,10 @@ Stack(
                     //   onPressed: () => GoRouter.of(context).push('/pause'),
                     //   child: NesIcon(iconData: NesIcons.pause),
                     child: InkResponse(
-                           onTap: () => GoRouter.of(context).push('/pause'),
+                           onTap: () {
+                            game.pauseEngine();
+                            GoRouter.of(context).push('/pause');
+                           },
                            child: Image.asset('assets/images/pause.png',
                               semanticLabel: 'Pause')
                      )

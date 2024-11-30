@@ -1,5 +1,8 @@
+import 'package:basic/game_internals/boss.dart';
 import 'package:basic/game_internals/collision.dart';
+import 'package:basic/game_internals/item.dart';
 import 'package:basic/play_session/boss_rush.dart';
+import 'package:flame/collisions.dart';
 //import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/src/services/hardware_keyboard.dart';
@@ -13,12 +16,11 @@ enum PlayerState { running, jumping, falling, standing }
 enum PlayerDirection { left, right, none }
 
 class Player extends SpriteAnimationGroupComponent<PlayerState>
-    with HasGameRef<BossRush>, KeyboardHandler {
+    with HasGameRef<BossRush>, KeyboardHandler, CollisionCallbacks {
   Player({super.position});
 
   //a separate variable in the case the step time needs to change
   final double stepTime = 0.1;
-
 
   PlayerDirection currDirection = PlayerDirection.none;
   double horiz = 0.0;
@@ -39,53 +41,56 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   //like in real life, when falling, we stop accelerating when we reach terminal velocity
   final double terminalVelocity = 300;
 
+  //TODO: use this boolean to create the player's sprite animation
+  bool hasItem = false;
+
   @override
   Future<void> onLoad() async {
     //debugMode = true;
 
-    //TODO: create jumping and falling animations
-    animations = {
-      PlayerState.standing: await game.loadSpriteAnimation(
-        "player_sprites/lil_dude/lil-dude-idle.png",
-        SpriteAnimationData.sequenced(
-          amount: 12,
-          textureSize: Vector2(25, 32),
-          stepTime: stepTime,
+    if (!hasItem) {
+      //TODO: create jumping and falling animations
+      animations = {
+        PlayerState.standing: await game.loadSpriteAnimation(
+          "player_sprites/lil_dude/lil-dude-idle.png",
+          SpriteAnimationData.sequenced(
+            amount: 12,
+            textureSize: Vector2(25, 32),
+            stepTime: stepTime,
+          ),
         ),
-      ),
-      PlayerState.running: await game.loadSpriteAnimation(
-        "player_sprites/lil_dude/lil-dude-running.png",
-        SpriteAnimationData.sequenced(
-          amount: 11,
-          textureSize: Vector2(25, 32),
-          stepTime: stepTime - 0.05,
+        PlayerState.running: await game.loadSpriteAnimation(
+          "player_sprites/lil_dude/lil-dude-running.png",
+          SpriteAnimationData.sequenced(
+            amount: 11,
+            textureSize: Vector2(25, 32),
+            stepTime: stepTime - 0.05,
+          ),
         ),
-      ),
-      PlayerState.jumping: await game.loadSpriteAnimation(
-        "player_sprites/lil_dude/lil-dude-idle.png",
-        SpriteAnimationData.sequenced(
-          amount: 11,
-          textureSize: Vector2(25, 32),
-          stepTime: stepTime,
+        PlayerState.jumping: await game.loadSpriteAnimation(
+          "player_sprites/lil_dude/lil-dude-idle.png",
+          SpriteAnimationData.sequenced(
+            amount: 11,
+            textureSize: Vector2(25, 32),
+            stepTime: stepTime,
+          ),
         ),
-      ),
-      PlayerState.falling: await game.loadSpriteAnimation(
-        "player_sprites/lil_dude/lil-dude-idle.png",
-        SpriteAnimationData.sequenced(
-          amount: 11,
-          textureSize: Vector2(25, 32),
-          stepTime: stepTime,
-        ),
-      )
-    };
+        PlayerState.falling: await game.loadSpriteAnimation(
+          "player_sprites/lil_dude/lil-dude-idle.png",
+          SpriteAnimationData.sequenced(
+            amount: 11,
+            textureSize: Vector2(25, 32),
+            stepTime: stepTime,
+          ),
+        )
+      };
+    } else {}
 
     //default animation
     //"current" is a provided setter
     current = PlayerState.standing;
 
-    //currVelocity.setFrom(position);
-
-    //add(CircleHitbox());
+    add(RectangleHitbox());
   }
 
   @override
@@ -98,6 +103,31 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
     _checkVertCollisions();
     //update, similar to Sonic Dash
     super.update(dt);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    
+    //TODO: play sound effects here!
+    if (other is Item) {
+      other.playerCollide();
+      hasItem = true;
+    }
+
+    //TODO: boss logic
+    //if other is boss
+    else if (other is Boss) {
+      //if player has item
+          if (hasItem){
+            //player win
+          }
+
+        else{
+          //player lose
+        }
+            
+    }
+    super.onCollision(intersectionPoints, other);
   }
 
   @override
@@ -117,8 +147,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
     return super.onKeyEvent(event, keysPressed);
   }
 
-  void _updateState() {      
-    
+  void _updateState() {
     PlayerState newState = PlayerState.standing;
 
     if (velocity.x < 0 && scale.x > 0) {
@@ -129,18 +158,16 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
 
     if (velocity.x != 0) {
       newState = PlayerState.running;
-    } 
+    }
 
-    if (velocity.y > 0){
+    if (velocity.y > 0) {
       newState = PlayerState.falling;
     }
-    if (velocity.y < 0){
+    if (velocity.y < 0) {
       newState = PlayerState.jumping;
     }
 
     current = newState;
-
-    
   }
 
   void _updatePlayerMovement(double dt) {
