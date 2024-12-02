@@ -17,13 +17,13 @@ class Item extends SpriteAnimationComponent with HasGameRef<BossRush>{
 
     @override
   Future<void> onLoad() async{
-    debugMode = true;
+    debugMode = false;
     priority = -1; 
 
     add(RectangleHitbox(
-
       collisionType: CollisionType.passive
     ));
+
     animation = await game.loadSpriteAnimation(
       "item/item.png", 
       SpriteAnimationData.sequenced(
@@ -40,11 +40,6 @@ class Item extends SpriteAnimationComponent with HasGameRef<BossRush>{
     //fthis makes it look like the object disappears when collected
       removeFromParent();
       _isCollected = true;
-
   }
-
-
-  
-
 
 }

@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:basic/game_internals/player.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
-import '../game_internals/level_state.dart';
+import '../game_internals/game_state.dart';
 import '../game_internals/score.dart';
 //import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
@@ -65,14 +66,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     return MultiProvider(
       providers: [
         //Provider.value(value: widget.level),
-        // Create and provide the [LevelState] object that will be used
+        // Create and provide the [GameState] object that will be used
         // by widgets below this one in the widget tree.
         ChangeNotifierProvider(
-          create: (context) => LevelState(
-            //goal: widget.level.difficulty,
-            onWin: _playerWon,
-            onLoss: _playerLost
-          ),
+          create: (context) => GameState(
+              //goal: widget.level.difficulty,
+              player: Player(),
+              onWin: _playerWon,
+              onLoss: _playerLost),
         ),
       ],
       child: IgnorePointer(
@@ -81,10 +82,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         child: Scaffold(
           backgroundColor: palette.backgroundPlaySession,
           body:
-                   // The stack is how you layer widgets on top of each other.
-          // Here, it is used to overlay the winning confetti animation on top
-          // of the game.
-Stack(
+              // The stack is how you layer widgets on top of each other.
+              // Here, it is used to overlay the winning confetti animation on top
+              // of the game.
+              Stack(
             children: [
               // This is the main layout of the play session screen,
               // with a pause button on top and actual play area
@@ -96,19 +97,17 @@ Stack(
                   //place the pause functionality here
                   Align(
                       alignment: Alignment.centerRight,
-                    // child: NesButton(
-                    //   type: NesButtonType.normal,
-                    //   onPressed: () => GoRouter.of(context).push('/pause'),
-                    //   child: NesIcon(iconData: NesIcons.pause),
-                    child: InkResponse(
-                           onTap: () {
+                      // child: NesButton(
+                      //   type: NesButtonType.normal,
+                      //   onPressed: () => GoRouter.of(context).push('/pause'),
+                      //   child: NesIcon(iconData: NesIcons.pause),
+                      child: InkResponse(
+                          onTap: () {
                             game.pauseEngine();
                             GoRouter.of(context).push('/pause');
-                           },
-                           child: Image.asset('assets/images/pause.png',
-                              semanticLabel: 'Pause')
-                     )
-                    ),
+                          },
+                          child: Image.asset('assets/images/pause.png',
+                              semanticLabel: 'Pause'))),
                   //const Spacer(),
                   Expanded(
                     // The actual UI of the game.
@@ -138,7 +137,6 @@ Stack(
               ),
             ],
           ),
-          
         ),
       ),
     );
@@ -153,7 +151,7 @@ Stack(
       DateTime.now().difference(_startOfPlay),
     );
 
-    final playerProgress = context.read<PlayerProgress>();
+    //final playerProgress = context.read<PlayerProgress>();
     //playerProgress.setLevelReached(widget.level.number);
 
     // Let the player see the game just after winning for a bit.
@@ -172,7 +170,8 @@ Stack(
     if (!mounted) return;
 
     GoRouter.of(context).go('/play/won', extra: {'score': score});
-  }  
+  }
+
   Future<void> _playerLost() async {
     final score = Score(
       //widget.level.number,

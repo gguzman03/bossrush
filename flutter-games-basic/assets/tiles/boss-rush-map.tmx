@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="76">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="87">
  <tileset firstgid="1" source="test-terrain-tileset.tsx"/>
  <layer id="1" name="Background" width="40" height="23">
   <data encoding="csv">
@@ -31,6 +31,7 @@
  <objectgroup id="3" name="spawn_points">
   <object id="3" name="Player" type="Player" x="32" y="256" width="25" height="32"/>
   <object id="75" name="Item" type="Item" x="624" y="256" width="16" height="25"/>
+  <object id="85" type="Boss" x="304" y="192" width="102" height="104"/>
  </objectgroup>
  <objectgroup id="4" name="collisions">
   <object id="45" x="-16" y="0" width="16" height="368"/>

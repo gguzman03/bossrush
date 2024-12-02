@@ -3,10 +3,8 @@ import 'package:basic/game_internals/collision.dart';
 import 'package:basic/game_internals/item.dart';
 import 'package:basic/play_session/boss_rush.dart';
 import 'package:flame/collisions.dart';
-//import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/src/services/hardware_keyboard.dart';
-//import 'package:flutter/animation.dart';
 
 //standing = idle
 enum PlayerState { running, jumping, falling, standing }
@@ -41,8 +39,18 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   //like in real life, when falling, we stop accelerating when we reach terminal velocity
   final double terminalVelocity = 300;
 
+  //On mobile, the frame rate is different compared to web. This causes certain bugs, such
+  //as the player jumping too high. The [dtMobile] double handles that issue.
+
+  final double dtMobile = 1 / 60;
+
+  //Further more, the below [accumulatedTime] variable
+
   //TODO: use this boolean to create the player's sprite animation
   bool hasItem = false;
+
+  bool hasWon = false;
+  bool hasLost = false;
 
   @override
   Future<void> onLoad() async {
@@ -107,25 +115,27 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    
     //TODO: play sound effects here!
     if (other is Item) {
       other.playerCollide();
       hasItem = true;
+      print("player has item!");
     }
 
     //TODO: boss logic
     //if other is boss
     else if (other is Boss) {
       //if player has item
-          if (hasItem){
-            //player win
-          }
-
-        else{
-          //player lose
-        }
-            
+      if (hasItem) {
+        //player win
+        hasWon = true;
+        //debug statement
+        print("player wins!");
+      } else {
+        //player lose
+        hasLost = true;
+        print("player loses...");    
+      }
     }
     super.onCollision(intersectionPoints, other);
   }

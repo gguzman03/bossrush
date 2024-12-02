@@ -5,9 +5,11 @@
 import 'dart:async';
 //import 'dart:ui';
 
+import 'package:basic/game_internals/jump_button.dart';
 import 'package:basic/game_internals/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,7 @@ import 'package:flame/game.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
-import '../game_internals/level_state.dart';
+import '../game_internals/game_state.dart';
 //import '../level_selection/levels.dart';
 import '../level_selection/boss_map.dart';
 
@@ -58,7 +60,7 @@ import '../level_selection/boss_map.dart';
 
 //TODO: implement a score notifier
 class BossRush extends FlameGame
-    with HasKeyboardHandlerComponents, HasCollisionDetection, DragCallbacks {
+    with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
   BossRush();
 
   @override
@@ -73,12 +75,16 @@ class BossRush extends FlameGame
   late JoystickComponent joystick;
   Player player = Player();
 
-  FutureOr<void> onLoad() async{
+  //testing boolean for mobile functionality.
+  //this will be set false when adding a new feature for the game,
+  //then true when playing on mobile or adding a new mobile feature.
+  bool isMobile = false;
 
+  FutureOr<void> onLoad() async {
     await images.loadAllImages();
 
-
     final bossMap = BossMap(player: player);
+
     //recommended camera resolution: 640x360
     cameraComponent = CameraComponent.withFixedResolution(
         world: bossMap, width: 640, height: 360);
@@ -87,54 +93,55 @@ class BossRush extends FlameGame
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
 
     //stuff to add, including the camera
-    
     final components = [bossMap, cameraComponent];
     addAll(components);
-    addJoystick();
+
+    if (isMobile) {
+      addJoystick();
+      add(JumpButton());
+    }
     return super.onLoad();
   }
 
   //to implement movement using the joystick, create an update(dt) method in boss_rush.
-
-  // @override
-  // void update(double dt) {
-  //   switch (joystick.direction) {
-  //     case JoystickDirection.left:
-  //       player.currDirection = PlayerDirection.left;
-  //       break;
-  //     case JoystickDirection.right:
-  //       player.currDirection = PlayerDirection.right;
-  //       break;
-
-  //     case JoystickDirection.up:
-  //       player.jumped = true;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
+  @override
+  void update(double dt) {
+    if (isMobile) {
+      switch (joystick.direction) {
+        case JoystickDirection.left:
+        case JoystickDirection.upLeft:
+        case JoystickDirection.downLeft:
+          player.horiz = -1;
+          break;
+        case JoystickDirection.right:
+        case JoystickDirection.upRight:
+        case JoystickDirection.downRight:
+          player.horiz = 1;
+          break;
+        // case JoystickDirection.up:
+        //   player.jumped = true;
+        //   break;
+        default:
+          player.horiz = 0;
+          break;
+      }
+    }
+    super.update(dt);
+  }
 
   //a joystick to be added for mobile functionality
-   Future<void> addJoystick() async {
-
-    /*
-    For whatever reason, the four statements below don't work
-    */
-    //Image knobImage = Image.asset("joystick_parts/Knob.png");
-    //Sprite knobSprite = Sprite(knobImage);
-
-    //Image baseImage = Image.asset("joystick_parts/Joystick_Base.png");
-    // Sprite baseSprite = Sprite(baseImage);
-
-
+  Future<void> addJoystick() async {
     joystick = JoystickComponent(
-        knob: SpriteComponent.fromImage(images.fromCache("joystick_parts/Knob.png")),
-        background: SpriteComponent.fromImage(images.fromCache("joystick_parts/Joystick_Base.png")),
+        priority: 10,
+        knob: CircleComponent(radius: 10, paint: BasicPalette.gray.paint()),
+        background:
+            CircleComponent(radius: 20, paint: BasicPalette.black.paint()),
         //puts the joystick in the bottom left corner
-        margin: const EdgeInsets.only(left: 32, bottom: 32)
-      );
+        margin: const EdgeInsets.only(left: 2, bottom: 2));
 
     add(joystick);
+    //cameraComponent.viewport.add(joystick);
   }
+
+
 }

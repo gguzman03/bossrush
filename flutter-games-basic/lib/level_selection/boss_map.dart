@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:basic/game_internals/boss.dart';
 import 'package:basic/game_internals/collision.dart';
 import 'package:basic/game_internals/item.dart';
 import 'package:basic/game_internals/player.dart';
@@ -37,13 +38,17 @@ class BossMap extends World {
             size: Vector2(spawnPoint.width, spawnPoint.height));
           add(item);
           break;
+        case 'Boss':
+          final boss = Boss(position: Vector2(spawnPoint.x, spawnPoint.y), 
+            size: Vector2(spawnPoint.width, spawnPoint.height));
+          add(boss);
         default:
+          break;
       }
 
     }
 
     final collisionsLayer = map.tileMap.getLayer<ObjectGroup>("collisions");
-
         for (final collision in collisionsLayer!.objects) {
       switch (collision.class_) {
         case 'Platform':
