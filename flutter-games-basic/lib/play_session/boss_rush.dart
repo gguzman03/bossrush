@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'package:basic/game_internals/jump_button.dart';
 import 'package:basic/game_internals/player.dart';
+import 'package:basic/game_internals/weather_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/palette.dart';
@@ -58,13 +59,43 @@ import '../level_selection/boss_map.dart';
 //   }
 //}
 
+
+
+
+
 //TODO: implement a score notifier
+
+//TODO: weather management is wonky. This solution is solely for fdunctionality.
+// adjust the router, main menu screen, and this file to add parameters for weather soon.
 class BossRush extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
-  BossRush();
+   String color;
+  BossRush(this.color);
+
+  Map<String, Color> weatherColors= {
+    "Thunderstorm": Color.fromARGB(255, 38, 38, 38),
+    "Drizzle": Color.fromARGB(255, 153, 198, 210),
+    "Rain":Color.fromARGB(255, 52, 107, 126),
+    "Snow":Color.fromARGB(255, 234, 234, 234),
+    "Clear": Color.fromARGB(255, 122, 226, 255),
+    "Clouds": Color.fromARGB(255, 150, 150, 150),
+    "Mist": Color.fromARGB(255, 193, 246, 255),
+    "Smoke": Color.fromARGB(255, 86, 77, 77),
+    "Haze": Color.fromARGB(255, 92, 193, 188),
+    "Dust":Color.fromARGB(255, 126, 107, 65),
+    "Fog":Color.fromARGB(173, 141, 169, 184),
+    "Sand":Color.fromARGB(172, 255, 234, 130),
+    "Ash":Color.fromARGB(255, 125, 0, 0), 
+    "Squall":Color.fromARGB(255, 205, 237, 255),
+    "Tornado": Color.fromARGB(255, 0, 14, 25),
+    "Weather unavailable": Color.fromARGB(255, 125, 0, 0)
+  };
 
   @override
-  Color backgroundColor() => const Color.fromARGB(255, 0, 200, 255);
+  Color backgroundColor() {
+      var backgroundColor = weatherColors[color]!;
+      return backgroundColor;
+  } 
 
   //stuff to add to the game
 
@@ -96,6 +127,9 @@ class BossRush extends FlameGame
     final components = [bossMap, cameraComponent];
     addAll(components);
 
+  //though my proposal only mentions keyboard functionality, 
+  //this is the attempt at pure mobile functionality as well
+  // (i.e. not with a keyboard) 
     if (isMobile) {
       addJoystick();
       add(JumpButton());
@@ -133,9 +167,9 @@ class BossRush extends FlameGame
   Future<void> addJoystick() async {
     joystick = JoystickComponent(
         priority: 10,
-        knob: CircleComponent(radius: 10, paint: BasicPalette.gray.paint()),
+        knob: CircleComponent(radius: 15, paint: BasicPalette.gray.paint()),
         background:
-            CircleComponent(radius: 20, paint: BasicPalette.black.paint()),
+            CircleComponent(radius: 30, paint: BasicPalette.black.paint()),
         //puts the joystick in the bottom left corner
         margin: const EdgeInsets.only(left: 2, bottom: 2));
 

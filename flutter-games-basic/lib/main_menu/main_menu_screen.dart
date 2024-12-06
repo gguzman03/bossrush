@@ -91,13 +91,13 @@ class MainMenuScreen extends StatelessWidget {
                          return const CircularProgressIndicator();
                   }
                   if (snapshot.hasError){
-                    return Text("Error in fetching data: ${snapshot.error}");
+                    return Text("Error in fetching data: ${snapshot.error}. Entering the depths...");
                   }
                   if (snapshot.hasData){
                       var currWeather = snapshot.data as String;
                       return Text("Current Weather: $currWeather");
                   }
-                  return const Text("Snapshot has no data for weather...");
+                  return const Text("Snapshot has no data for weather. Entering the depths...");
               }
               
               )

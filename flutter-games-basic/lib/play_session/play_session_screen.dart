@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:basic/game_internals/player.dart';
+import 'package:basic/game_internals/weather_manager.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -58,10 +59,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _startOfPlay = DateTime.now();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    BossRush game = BossRush();
+    final api = "5a75920ab7bd192bf92a40977af3b9f3";
+
+    var wm = WeatherManager(api);
+    var weather = wm.getWeather();
+    late BossRush game;
 
     return MultiProvider(
       providers: [
@@ -90,39 +97,52 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               // This is the main layout of the play session screen,
               // with a pause button on top and actual play area
               // below
-              Column(
+              FutureBuilder<String>(
+                future: weather, 
+                builder: (context, snapshot){
+                  late String weatherString;
+                  while (snapshot.connectionState != ConnectionState.done) {
+                     return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError){
+                      // return Text("Error in fetching data: ${snapshot.error}");
+                      weatherString = "Weather unavailable";
+                  }
+                  else if (!snapshot.hasData){
+                      weatherString = "Weather unavailable";
+                  }
+                  else{
+                    weatherString = snapshot.data!;
+                  }
+
+                game = BossRush(weatherString);
+                return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   //place the pause functionality here
                   Align(
                       alignment: Alignment.centerRight,
-                      // child: NesButton(
-                      //   type: NesButtonType.normal,
-                      //   onPressed: () => GoRouter.of(context).push('/pause'),
-                      //   child: NesIcon(iconData: NesIcons.pause),
                       child: InkResponse(
                           onTap: () {
                             game.pauseEngine();
-                            GoRouter.of(context).push('/pause');
+                            GoRouter.of(context).push('/pause', extra: game);
                           },
                           child: Image.asset('assets/images/pause.png',
                               semanticLabel: 'Pause'))),
-                  //const Spacer(),
                   Expanded(
                     // The actual UI of the game.
-                    child: GameWidget(game: kDebugMode ? BossRush() : game),
+                    child: GameWidget(game: game),
                   ),
-                  //const Spacer(),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: MyButton(
-                  //     onPressed: () => GoRouter.of(context).go('/play'),
-                  //     child: const Text('Back'),
-                  //   ),
-                  // ),
-                ],
+                    ],
+                  );
+
+
+                }
+              
+              
               ),
+
               // This is the confetti animation that is overlaid on top of the
               // game when the player wins.
               SizedBox.expand(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:basic/game_internals/boss.dart';
 import 'package:basic/game_internals/collision.dart';
+import 'package:basic/game_internals/hazard.dart';
 import 'package:basic/game_internals/item.dart';
 import 'package:basic/game_internals/player.dart';
 import 'package:flame/components.dart';
@@ -39,9 +40,16 @@ class BossMap extends World {
           add(item);
           break;
         case 'Boss':
-          final boss = Boss(position: Vector2(spawnPoint.x, spawnPoint.y), 
+          final boss = Boss(
+            position: Vector2(spawnPoint.x, spawnPoint.y), 
             size: Vector2(spawnPoint.width, spawnPoint.height));
           add(boss);
+        case 'Hazard':
+          final hazard = Hazard(
+            position: Vector2(spawnPoint.x, spawnPoint.y), 
+            size: Vector2(spawnPoint.width, spawnPoint.height));
+          add(hazard);
+          break;
         default:
           break;
       }
@@ -72,3 +80,4 @@ class BossMap extends World {
     return super.onLoad();
   }
 }
+

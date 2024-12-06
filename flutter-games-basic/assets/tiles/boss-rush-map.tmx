@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="87">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="96">
  <tileset firstgid="1" source="test-terrain-tileset.tsx"/>
  <layer id="1" name="Background" width="40" height="23">
   <data encoding="csv">
@@ -31,13 +31,17 @@
  <objectgroup id="3" name="spawn_points">
   <object id="3" name="Player" type="Player" x="32" y="256" width="25" height="32"/>
   <object id="75" name="Item" type="Item" x="624" y="256" width="16" height="25"/>
-  <object id="85" type="Boss" x="304" y="192" width="102" height="104"/>
+  <object id="85" name="Boss" type="Boss" x="304" y="192" width="102" height="104"/>
+  <object id="87" name="Hazard" type="Hazard" x="112" y="320" width="112" height="48"/>
+  <object id="95" name="Hazard" type="Hazard" x="224" y="336" width="16" height="32"/>
+  <object id="90" name="Hazard" type="Hazard" x="240" y="80" width="64" height="16"/>
+  <object id="91" name="Hazard" type="Hazard" x="432" y="320" width="48" height="48"/>
  </objectgroup>
- <objectgroup id="4" name="collisions">
+ <objectgroup id="4" name="collisions" visible="0">
   <object id="45" x="-16" y="0" width="16" height="368"/>
   <object id="48" x="-16" y="352" width="640" height="16"/>
   <object id="50" x="640" y="0" width="16" height="368"/>
-  <object id="51" x="0" y="-48" width="640" height="16"/>
+  <object id="51" x="0" y="-80" width="640" height="16"/>
   <object id="52" x="0" y="304" width="112" height="64"/>
   <object id="54" x="480" y="208" width="32" height="160"/>
   <object id="55" x="512" y="224" width="16" height="144"/>

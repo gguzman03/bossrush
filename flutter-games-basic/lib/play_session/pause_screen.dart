@@ -1,3 +1,4 @@
+import 'package:basic/play_session/boss_rush.dart';
 import 'package:basic/settings/settings.dart';
 import 'package:basic/style/responsive_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,10 @@ import '../style/my_button.dart';
 import '../style/palette.dart';
 
 class PauseScreen extends StatelessWidget {
-  const PauseScreen({super.key});
+
+  final BossRush game;
+  const PauseScreen({required this.game, super.key});
+  //const PauseScreen({super.key});
   static const _gap = SizedBox(height: 60);
 
   @override
@@ -52,8 +56,10 @@ class PauseScreen extends StatelessWidget {
                   //resume button
                   MyButton(
                       onPressed: () {
-                        //do nothing, then pop
+                        //do nothing, resume engine, then pop 
                         GoRouter.of(context).pop();
+                        game.resumeEngine();
+                       
                       },
                       child: const Text("Resume")),
 

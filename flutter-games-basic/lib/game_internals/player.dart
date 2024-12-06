@@ -1,5 +1,6 @@
 import 'package:basic/game_internals/boss.dart';
 import 'package:basic/game_internals/collision.dart';
+import 'package:basic/game_internals/hazard.dart';
 import 'package:basic/game_internals/item.dart';
 import 'package:basic/play_session/boss_rush.dart';
 import 'package:flame/collisions.dart';
@@ -136,7 +137,19 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
         hasLost = true;
         print("player loses...");    
       }
-    }
+    }      
+    
+    else if (other is Hazard){
+      //if the collision is a hazard, you lose regardless
+            //player loses
+            hasLost = true;
+            print("player loses");
+        
+       
+
+      }
+
+      //TODO: if the collision is a fireball, player loses regardless
     super.onCollision(intersectionPoints, other);
   }
 

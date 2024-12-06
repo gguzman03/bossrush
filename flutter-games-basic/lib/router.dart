@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/play_session/boss_rush.dart';
 import 'package:basic/play_session/pause_screen.dart';
 import 'package:basic/settings/reset_progress_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -125,7 +126,11 @@ final router = GoRouter(
         //new page: Pause
         GoRoute(
             path: 'pause',
-            builder: (context, state) => const PauseScreen(key: Key('pause')))
+            builder: (context, state){
+              //passes the game via navigation parameters to the Pause screen in order to unpause the game from there
+                var game = state.extra as BossRush;
+                return PauseScreen(game: game, key: const Key('pause'));
+            } )
       ],
     ),
   ],

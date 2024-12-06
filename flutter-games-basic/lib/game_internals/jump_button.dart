@@ -18,11 +18,17 @@ class JumpButton extends SpriteComponent with HasGameRef<BossRush>, TapCallbacks
    
   @override
   FutureOr<void> onLoad() async{
-    priority = 10;
+    priority = 100;
     sprite = Sprite(game.images.fromCache("Jump_Button.png"));
+
+    //FIXME: placeholder values. the commented values are for the 
+    // jump button to be at the lower right corner of the screen
+    // which is more fitting for mobile play, unlike on desktop.
     position = Vector2(
-      game.size.x - 32 - 64, 
-      game.size.y - 32 - 64);
+      // game.size.x - 32 - 64, 
+      // game.size.y - 32 - 64);
+      0+32+16, game.size.y-32-50
+    );
 
     return super.onLoad();
   }
