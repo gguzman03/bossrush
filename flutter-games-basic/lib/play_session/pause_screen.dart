@@ -50,8 +50,8 @@ class PauseScreen extends StatelessWidget {
 
               _gap,
             ]),
-            rectangularMenuArea: Expanded(
-              child: Row(
+            rectangularMenuArea: 
+               Row(
                 children: [
                   //resume button
                   MyButton(
@@ -73,7 +73,9 @@ class PauseScreen extends StatelessWidget {
                       child: const Text("Quit"))
                 ],
               ),
-            )));
+            )
+            
+          );
   }
 }
 
