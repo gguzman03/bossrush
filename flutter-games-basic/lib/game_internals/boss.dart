@@ -11,7 +11,7 @@ class Boss extends SpriteAnimationComponent with HasGameRef<BossRush>, Collision
   @override
   Future<void> onLoad() async {
 
-    debugMode = true;
+    debugMode = false;
     //the current placeholder hitbox will be minus the boss's wings, rezulting in dimensions of 76x96
     add(RectangleHitbox(size: Vector2(76,104)));
 

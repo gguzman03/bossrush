@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/play_session/boss_rush.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -50,12 +51,16 @@ class LoseGameScreen extends StatelessWidget {
           ],
         ),
         rectangularMenuArea: 
-              Expanded(       
-                child: Row(
+            Row(
                   children: [
                     MyButton(
                       onPressed: () {
-                        GoRouter.of(context).go('/play/session/1');
+                        //FIXME: really dumb placeholder way to get the "reset game" logic down, 
+                        //if a better solution is found before the deadline, use it
+                        while (GoRouter.of(context).canPop()) {
+                            GoRouter.of(context).pop();
+                          }
+                        GoRouter.of(context).go("/play");
                       },
                       child: const Text('Try Again'),
                     ),
@@ -70,7 +75,7 @@ class LoseGameScreen extends StatelessWidget {
             ],
           ),
         )
-      ),
+      
     );
   }
 }

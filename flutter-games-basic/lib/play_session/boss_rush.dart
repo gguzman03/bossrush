@@ -27,75 +27,43 @@ import '../level_selection/boss_map.dart';
 
 /// This widget defines the game UI itself, without things like the settings
 /// button or the back button.
-// class GameWidget extends StatelessWidget {
-//   const GameWidget({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     //don't need this for BossRush
-//     //final level = context.watch<GameLevel>();
+//TODO: implement some kind of notifier for player progress
 
-//     //might need this for BossRush
-//     final levelState = context.watch<LevelState>();
-
-// //This is the actual game itself (not the page that has the game)
-//     // return Column(
-//     //   children: [
-//     //     Text('Drag the slider to 100% or above!'),
-//     //     Slider(
-//     //       label: 'Level Progress',
-//     //       autofocus: true,
-//     //       value: levelState.progress / 100,
-//     //       onChanged: (value) => levelState.setProgress((value * 100).round()),
-//     //       onChangeEnd: (value) {
-//     //         context.read<AudioController>().playSfx(SfxType.wssh);
-//     //         levelState.evaluate();
-//     //       },
-//     //     ),
-//     //   ],
-//     // );
-
-//     return Text("game in progress :)");
-//   }
-//}
-
-
-
-
-
-//TODO: implement a score notifier
-
-//TODO: weather management is wonky. This solution is solely for fdunctionality.
-// adjust the router, main menu screen, and this file to add parameters for weather soon.
 class BossRush extends FlameGame
-    with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
-   String color;
-  BossRush(this.color);
+    with
+        HasKeyboardHandlerComponents,
+        DragCallbacks,
+        HasCollisionDetection,
+        TapCallbacks {
+  GameState gameState;
+  String color;
+  BossRush(this.color, this.gameState);
 
-  Map<String, Color> weatherColors= {
+  Map<String, Color> weatherColors = {
     "Thunderstorm": Color.fromARGB(255, 38, 38, 38),
     "Drizzle": Color.fromARGB(255, 153, 198, 210),
-    "Rain":Color.fromARGB(255, 52, 107, 126),
-    "Snow":Color.fromARGB(255, 234, 234, 234),
+    "Rain": Color.fromARGB(255, 52, 107, 126),
+    "Snow": Color.fromARGB(255, 234, 234, 234),
     "Clear": Color.fromARGB(255, 122, 226, 255),
     "Clouds": Color.fromARGB(255, 150, 150, 150),
     "Mist": Color.fromARGB(255, 193, 246, 255),
     "Smoke": Color.fromARGB(255, 86, 77, 77),
     "Haze": Color.fromARGB(255, 92, 193, 188),
-    "Dust":Color.fromARGB(255, 126, 107, 65),
-    "Fog":Color.fromARGB(173, 141, 169, 184),
-    "Sand":Color.fromARGB(172, 255, 234, 130),
-    "Ash":Color.fromARGB(255, 125, 0, 0), 
-    "Squall":Color.fromARGB(255, 205, 237, 255),
+    "Dust": Color.fromARGB(255, 126, 107, 65),
+    "Fog": Color.fromARGB(173, 141, 169, 184),
+    "Sand": Color.fromARGB(172, 255, 234, 130),
+    "Ash": Color.fromARGB(255, 125, 0, 0),
+    "Squall": Color.fromARGB(255, 205, 237, 255),
     "Tornado": Color.fromARGB(255, 0, 14, 25),
-    "Weather unavailable": Color.fromARGB(255, 125, 0, 0)
+    "Weather unavailable": Color.fromARGB(255, 60, 0, 0)
   };
 
   @override
   Color backgroundColor() {
-      var backgroundColor = weatherColors[color]!;
-      return backgroundColor;
-  } 
+    var backgroundColor = weatherColors[color]!;
+    return backgroundColor;
+  }
 
   //stuff to add to the game
 
@@ -104,7 +72,7 @@ class BossRush extends FlameGame
   late final CameraComponent cameraComponent;
 
   late JoystickComponent joystick;
-  Player player = Player();
+  late Player player;
 
   //testing boolean for mobile functionality.
   //this will be set false when adding a new feature for the game,
@@ -113,6 +81,8 @@ class BossRush extends FlameGame
 
   FutureOr<void> onLoad() async {
     await images.loadAllImages();
+
+    player = gameState.player;
 
     final bossMap = BossMap(player: player);
 
@@ -127,13 +97,14 @@ class BossRush extends FlameGame
     final components = [bossMap, cameraComponent];
     addAll(components);
 
-  //though my proposal only mentions keyboard functionality, 
-  //this is the attempt at pure mobile functionality as well
-  // (i.e. not with a keyboard) 
+    // though my proposal only mentions keyboard functionality,
+    // this is an attempt at pure mobile functionality as well for a physical device
+    // (i.e. not with a keyboard)
     if (isMobile) {
       addJoystick();
       add(JumpButton());
     }
+
     return super.onLoad();
   }
 
@@ -160,10 +131,18 @@ class BossRush extends FlameGame
           break;
       }
     }
+    gameState.evaluate();
+
+//debug statements
+    // if (gameState.player.hasWon) {
+    //   print("player wins! called from boss_rush.dart.");
+    // } else if (gameState.player.hasLost) {
+    //   print("player lost! called from boss_rush.dart.");
+    // }
     super.update(dt);
   }
 
-  //a joystick to be added for mobile functionality
+  //a joystick to be added for pure mobile functionality
   Future<void> addJoystick() async {
     joystick = JoystickComponent(
         priority: 10,
@@ -176,6 +155,5 @@ class BossRush extends FlameGame
     add(joystick);
     //cameraComponent.viewport.add(joystick);
   }
-
 
 }

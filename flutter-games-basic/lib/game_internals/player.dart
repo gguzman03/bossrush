@@ -5,20 +5,21 @@ import 'package:basic/game_internals/item.dart';
 import 'package:basic/play_session/boss_rush.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/services/hardware_keyboard.dart';
 
 //standing = idle
 enum PlayerState { running, jumping, falling, standing }
 
-//an enum of player movement direction. none indicates the player
+//an enum of player movement direction. "none" indicates the player
 // is not moving
 enum PlayerDirection { left, right, none }
 
 class Player extends SpriteAnimationGroupComponent<PlayerState>
-    with HasGameRef<BossRush>, KeyboardHandler, CollisionCallbacks {
+    with HasGameRef<BossRush>, KeyboardHandler, CollisionCallbacks, ChangeNotifier {
   Player({super.position});
 
-  //a separate variable in the case the step time needs to change
+  ///[stepTime] is a separate variable in the case the step time needs to change
   final double stepTime = 0.1;
 
   PlayerDirection currDirection = PlayerDirection.none;
@@ -40,16 +41,19 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   //like in real life, when falling, we stop accelerating when we reach terminal velocity
   final double terminalVelocity = 300;
 
-  //On mobile, the frame rate is different compared to web. This causes certain bugs, such
-  //as the player jumping too high. The [dtMobile] double handles that issue.
+  ///On mobile, the frame rate is different compared to web. This causes certain bugs, such
+  ///as the player jumping too high. The [dtMobile] double handles that issue.
 
   final double dtMobile = 1 / 60;
 
-  //Further more, the below [accumulatedTime] variable
+  ///Further more, the below [accumulatedTime] variable
 
-  //TODO: use this boolean to create the player's sprite animation
+  double accumulatedTime = 0;
+
+  //This boolean flag checks if the player has the necessary item to win
   bool hasItem = false;
 
+  //game status checkers
   bool hasWon = false;
   bool hasLost = false;
 
@@ -104,12 +108,21 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
 
   @override
   void update(double dt) {
-    _updateState();
-    _updatePlayerMovement(dt);
-    _checkHorizCollisions();
-    //always check gravity after checking horizontal collisions
-    _gravity(dt);
-    _checkVertCollisions();
+    accumulatedTime += dt;
+
+    while (accumulatedTime >= dtMobile){
+      _updateState();
+      _updatePlayerMovement(dtMobile);
+      _checkHorizCollisions();
+      //always check gravity after checking horizontal collisions
+      _gravity(dtMobile);
+      _checkVertCollisions();
+      
+      accumulatedTime -= dtMobile;
+    } 
+
+    
+
     //update, similar to Sonic Dash
     super.update(dt);
   }
@@ -129,26 +142,30 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
       //if player has item
       if (hasItem) {
         //player win
+        game.pauseEngine();
         hasWon = true;
+        notifyListeners();
         //debug statement
-        print("player wins!");
+        //print("player hasWon: $hasWon");
       } else {
         //player lose
+        game.pauseEngine();
         hasLost = true;
-        print("player loses...");    
+        notifyListeners();
+        //print("player got hit by the boss..., hasLost: $hasLost");    
       }
     }      
-    
     else if (other is Hazard){
       //if the collision is a hazard, you lose regardless
             //player loses
+            game.pauseEngine();
             hasLost = true;
-            print("player loses");
-        
-       
+            //print("player fell on hazard and lost, hasLost: $hasLost");
+           notifyListeners();
 
       }
 
+      //game.gameState.evaluate();
       //TODO: if the collision is a fireball, player loses regardless
     super.onCollision(intersectionPoints, other);
   }

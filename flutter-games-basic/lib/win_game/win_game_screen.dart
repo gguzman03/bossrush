@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/play_session/boss_rush.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -50,12 +51,16 @@ class WinGameScreen extends StatelessWidget {
           ],
         ),
         rectangularMenuArea: 
-        Expanded(
-          child: Row(children: [
+          Row(children: [
               MyButton(
                 onPressed: () {
                   //FIXME: reset the game here
-                  GoRouter.of(context).go('/play/session/1');
+                  //still, really dumb placeholder way to get the "reset game" logic down, fix later?
+                  while (GoRouter.of(context).canPop()) {
+                      GoRouter.of(context).pop();
+                    }
+                    //GoRouter.of(context).go("/play");
+                  GoRouter.of(context).go('/play');
                 },
                 child: const Text('Play Again'),
               ),
@@ -70,7 +75,7 @@ class WinGameScreen extends StatelessWidget {
             ],)
 
         )
-      ),
+      
     );
   }
 }

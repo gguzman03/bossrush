@@ -5,7 +5,6 @@
 
 */
 
-
 import 'dart:async';
 
 import 'package:basic/play_session/boss_rush.dart';
@@ -22,12 +21,12 @@ class JumpButton extends SpriteComponent with HasGameRef<BossRush>, TapCallbacks
     sprite = Sprite(game.images.fromCache("Jump_Button.png"));
 
     //FIXME: placeholder values. the commented values are for the 
-    // jump button to be at the lower right corner of the screen
-    // which is more fitting for mobile play, unlike on desktop.
+    // jump button to be right next to the joystick, which is better for testing on desktop.
     position = Vector2(
-      // game.size.x - 32 - 64, 
-      // game.size.y - 32 - 64);
-      0+32+16, game.size.y-32-50
+      game.size.x - 32 - 64, 
+      game.size.y - 32 - 64
+
+      //0+32+16, game.size.y-32-50);
     );
 
     return super.onLoad();

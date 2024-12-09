@@ -9,31 +9,34 @@ import 'package:flutter/foundation.dart';
 ///
 /// Tracks only a single variable, [progress], and calls [onWin] when
 /// the value of [progress] reaches [goal].
-class GameState extends ChangeNotifier {
+class GameState with ChangeNotifier {
   final VoidCallback onWin;
   final VoidCallback onLoss;
 
   //final int goal;
 
+  //player object to keep track of game status
   Player player;
 
-  GameState({required this.onWin, required this.onLoss, required this.player});
+  GameState({required this.onWin, required this.onLoss, required this.player}){
 
-  // int _progress = 0;
+    //the listener to listen to the change in value (win/loss)
+    player.addListener(evaluate);
 
-  // int get progress => _progress;
-
-  // void setProgress(int value) {
-  //   _progress = value;
-  //   notifyListeners();
-  // }
-
+  }
+  
   void evaluate() {
     if (player.hasWon) {
+      //print("evaluate: player has won");
       onWin();
+      //resets flag for next time
+      player.hasWon = false;
     } 
     else if (player.hasLost){
+      //print("evaluate: player has lost");
       onLoss();
+      player.hasLost = false;
     }
   }
+
 }

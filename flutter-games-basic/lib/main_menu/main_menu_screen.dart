@@ -5,7 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:weather/weather.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';

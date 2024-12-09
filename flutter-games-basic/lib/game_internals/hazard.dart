@@ -9,7 +9,7 @@ class Hazard extends PositionComponent{
 
   @override
   FutureOr<void> onLoad(){
-    debugMode = true;
+    debugMode = false;
       add(RectangleHitbox());
 
       return super.onLoad();
