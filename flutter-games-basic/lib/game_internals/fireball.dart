@@ -12,7 +12,6 @@ class Fireball extends SpriteAnimationComponent with HasGameRef<BossRush> {
   @override
   Future<void> onLoad() async {
     //debugMode = true;
-    priority = -1;
     add(RectangleHitbox());
     animation = await game.loadSpriteAnimation(
         "boss/fireball.png",
@@ -27,10 +26,12 @@ class Fireball extends SpriteAnimationComponent with HasGameRef<BossRush> {
 
   @override
   void update(double dt){
-    if (position.x + 32 < 0){
+    if (position.x + 32 < 0 || position.y + 32 < 0){
       position.x = initialX;
+      position.y = initialY;
     } 
     position.x -= 100 * dt;
+    position.y -= 100 * dt;
     super.update(dt);
   }
 
