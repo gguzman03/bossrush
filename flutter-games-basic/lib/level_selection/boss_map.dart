@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:basic/game_internals/boss.dart';
 import 'package:basic/game_internals/collision.dart';
+import 'package:basic/game_internals/fireball.dart';
 import 'package:basic/game_internals/hazard.dart';
 import 'package:basic/game_internals/item.dart';
 import 'package:basic/game_internals/player.dart';
@@ -50,6 +51,15 @@ class BossMap extends World {
             size: Vector2(spawnPoint.width, spawnPoint.height));
           add(hazard);
           break;
+        case 'Fireball':
+          final fireball = Fireball(
+            position: Vector2(spawnPoint.x, spawnPoint.y), 
+            size: Vector2(spawnPoint.width, spawnPoint.height),
+            initialX: spawnPoint.x,
+            initialY: spawnPoint.y
+            );
+            add(fireball);
+            break;
         default:
           break;
       }

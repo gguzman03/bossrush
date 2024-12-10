@@ -1,5 +1,6 @@
 import 'package:basic/game_internals/boss.dart';
 import 'package:basic/game_internals/collision.dart';
+import 'package:basic/game_internals/fireball.dart';
 import 'package:basic/game_internals/hazard.dart';
 import 'package:basic/game_internals/item.dart';
 import 'package:basic/play_session/boss_rush.dart';
@@ -169,7 +170,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
         notifyListeners();
         //print("player got hit by the boss..., hasLost: $hasLost");
       }
-    } else if (other is Hazard) {
+    } else if (other is Hazard || other is Fireball) {
       //if the collision is a hazard, you lose regardless
       //player loses
       game.pauseEngine();

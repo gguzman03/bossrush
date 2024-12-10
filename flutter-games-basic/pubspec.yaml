@@ -46,6 +46,7 @@ flutter:
     - assets/images/player_sprites/lil_dude/lil-dude-running.png
     - assets/images/item/item.png
     - assets/images/boss/boss.png
+    - assets/images/boss/fireball.png
     - assets/audio/jump.wav
     - assets/audio/powerUp.wav
     
