@@ -11,7 +11,7 @@ class Fireball extends SpriteAnimationComponent with HasGameRef<BossRush> {
 
   @override
   Future<void> onLoad() async {
-    debugMode = true;
+    //debugMode = true;
     priority = -1;
     add(RectangleHitbox());
     animation = await game.loadSpriteAnimation(
