@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:basic/game_internals/player.dart';
 import 'package:basic/game_internals/weather_manager.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -19,12 +19,12 @@ import '../game_internals/game_state.dart';
 import '../game_internals/score.dart';
 //import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
-import '../style/confetti.dart';
-import '../style/my_button.dart';
+// import '../style/confetti.dart';
+// import '../style/my_button.dart';
 import '../style/palette.dart';
 import 'boss_rush.dart';
 
-import "package:nes_ui/nes_ui.dart";
+//import "package:nes_ui/nes_ui.dart";
 
 class PlaySessionScreen extends StatelessWidget {
   const PlaySessionScreen({super.key});
@@ -107,7 +107,7 @@ class PlaySessionScreen extends StatelessWidget {
     );
   }
 
-  static Future<void> _playerWon(
+   Future<void> _playerWon(
       BuildContext context, DateTime startOfPlay) async {
     final _log = Logger('PlaySessionScreen');
     _log.info('You win!');
@@ -118,7 +118,7 @@ class PlaySessionScreen extends StatelessWidget {
     GoRouter.of(context).push('/play/won', extra: {'score': score});
   }
 
-  static Future<void> _playerLost(
+    Future<void> _playerLost(
       BuildContext context, DateTime startOfPlay) async {
     final _log = Logger('PlaySessionScreen');
     _log.info('Level lost...');

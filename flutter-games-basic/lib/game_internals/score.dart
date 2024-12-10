@@ -3,25 +3,19 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // Encapsulates a score and the arithmetic to compute it.
-
 // Adjusted to not need level
+
 class Score {
   final int score;
-
   final Duration duration;
 
-  //final int level;
-
-  //factory Score(int level, int difficulty, Duration duration) {
   factory Score(Duration duration) {
+    //minimum score: 1
     var score = 1;
     // The lower the time to beat the level, the higher the score.
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    // return Score._(score, duration, level);
     return Score._(score, duration);
   }
-
-  //const Score._(this.score, this.duration, this.level);
 
   const Score._(this.score, this.duration);
 
@@ -46,7 +40,5 @@ class Score {
   }
 
   @override
-  //String toString() => 'Score<$score,$formattedTime,$level>';
-
   String toString() => 'Score<$score,$formattedTime>';
 }

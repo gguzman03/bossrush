@@ -55,11 +55,12 @@ class WinGameScreen extends StatelessWidget {
               MyButton(
                 onPressed: () {
                   //FIXME: reset the game here
-                  //still, really dumb placeholder way to get the "reset game" logic down, fix later?
+                  //still, really dumb placeholder way to get the "reset game" logic down, 
+                  // if a better solution is found before the deadline, use it
                   while (GoRouter.of(context).canPop()) {
                       GoRouter.of(context).pop();
                     }
-                    //GoRouter.of(context).go("/play");
+                  
                   GoRouter.of(context).go('/play');
                 },
                 child: const Text('Play Again'),
