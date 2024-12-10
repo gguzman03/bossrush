@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:flutter/material.dart';
+
 List<String> soundTypeToFilename(SfxType type) => switch (type) {
       SfxType.huhsh => const [
           'hash1.mp3',
@@ -35,7 +37,15 @@ List<String> soundTypeToFilename(SfxType type) => switch (type) {
         ],
       SfxType.swishSwish => const [
           'swishswish1.mp3',
-        ]
+        ],
+      
+      SfxType.playerGrabItem => const[
+          "powerUp.wav"
+      ],
+      SfxType.playerJump => const[
+          "jump.wav"
+      ]
+
     };
 
 /// Allows control over loudness of different SFX types.
@@ -49,6 +59,8 @@ double soundTypeToVolume(SfxType type) {
     case SfxType.congrats:
     case SfxType.erase:
     case SfxType.swishSwish:
+    case SfxType.playerGrabItem:
+    case SfxType.playerJump:
       return 1.0;
   }
 }
@@ -60,4 +72,6 @@ enum SfxType {
   congrats,
   erase,
   swishSwish,
+  playerJump,
+  playerGrabItem
 }

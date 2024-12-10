@@ -14,8 +14,7 @@ class Score {
 
   //factory Score(int level, int difficulty, Duration duration) {
   factory Score(Duration duration) {
-    // The higher the difficulty, the higher the score.
-    var score = 0;
+    var score = 1;
     // The lower the time to beat the level, the higher the score.
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);
     // return Score._(score, duration, level);

@@ -47,6 +47,9 @@ class PauseScreen extends StatelessWidget {
                   onSelected: settings.toggleMusicOn,
                 ),
               ),
+              _gap,
+              //FIXME: placeholder for instructions menu
+              Text("Use the WASD or Arrow keys to move your character around. \n Avoid the Boss and hazards in the area! Move close to the Sword to grab it and slay the Boss! Try to defeat the boss as quickly as possible!\n\nTIP: Leap across platforms when on the edge of your platform for optimized results!		"),
 
               _gap,
             ]),

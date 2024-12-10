@@ -5,8 +5,16 @@ import 'package:basic/game_internals/item.dart';
 import 'package:basic/play_session/boss_rush.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+// ignore: implementation_imports
 import 'package:flutter/src/services/hardware_keyboard.dart';
+
+
+/*
+FIXME: unfortunately, i couldn't find a way to treat player sounds as modifiable sfx in time (i.e. when sfx is off, so are the sounds).
+in the meantime, the player sounds will always play using the flame_audio package, using the simple play() method.
+*/
 
 //standing = idle
 enum PlayerState { running, jumping, falling, standing }
@@ -16,7 +24,11 @@ enum PlayerState { running, jumping, falling, standing }
 enum PlayerDirection { left, right, none }
 
 class Player extends SpriteAnimationGroupComponent<PlayerState>
-    with HasGameRef<BossRush>, KeyboardHandler, CollisionCallbacks, ChangeNotifier {
+    with
+        HasGameRef<BossRush>,
+        KeyboardHandler,
+        CollisionCallbacks,
+        ChangeNotifier {
   Player({super.position});
 
   ///[stepTime] is a separate variable in the case the step time needs to change
@@ -36,18 +48,18 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
 
   //value for gravity (9.8 m/s)
   final double g = 9.8;
-  //force of player jump meant to counteract gravity; test value is 460
-  final double fJump = 460;
+  //force of player jump meant to counteract gravity;
+  //initial test value is 460:
+  //accomodating for mobile, now its 260
+  final double fJump = 260;
   //like in real life, when falling, we stop accelerating when we reach terminal velocity
   final double terminalVelocity = 300;
 
   ///On mobile, the frame rate is different compared to web. This causes certain bugs, such
   ///as the player jumping too high. The [dtMobile] double handles that issue.
+  /// working in tandem with the below [accumulatedTime] variable
 
   final double dtMobile = 1 / 60;
-
-  ///Further more, the below [accumulatedTime] variable
-
   double accumulatedTime = 0;
 
   //This boolean flag checks if the player has the necessary item to win
@@ -110,33 +122,36 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   void update(double dt) {
     accumulatedTime += dt;
 
-    while (accumulatedTime >= dtMobile){
+    while (accumulatedTime >= dtMobile) {
       _updateState();
       _updatePlayerMovement(dtMobile);
       _checkHorizCollisions();
       //always check gravity after checking horizontal collisions
       _gravity(dtMobile);
       _checkVertCollisions();
-      
-      accumulatedTime -= dtMobile;
-    } 
 
-    
+      accumulatedTime -= dtMobile;
+    }
 
     //update, similar to Sonic Dash
     super.update(dt);
   }
 
+/*
+  When it comes to the Player colliding with things, it is better to have Player.dart 
+  implement collision callback as opposed to the class of the .dart file of the object the Player is colliding with, 
+  unless the Object has to do something upon collision (i.e. an Item).
+*/
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     //TODO: play sound effects here!
     if (other is Item) {
+      FlameAudio.play("powerUp.wav");
       other.playerCollide();
       hasItem = true;
-      print("player has item!");
+      //print("player has item!");
     }
 
-    //TODO: boss logic
     //if other is boss
     else if (other is Boss) {
       //if player has item
@@ -152,21 +167,18 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
         game.pauseEngine();
         hasLost = true;
         notifyListeners();
-        //print("player got hit by the boss..., hasLost: $hasLost");    
+        //print("player got hit by the boss..., hasLost: $hasLost");
       }
-    }      
-    else if (other is Hazard){
+    } else if (other is Hazard) {
       //if the collision is a hazard, you lose regardless
-            //player loses
-            game.pauseEngine();
-            hasLost = true;
-            //print("player fell on hazard and lost, hasLost: $hasLost");
-           notifyListeners();
+      //player loses
+      game.pauseEngine();
+      hasLost = true;
+      //print("player fell on hazard and lost, hasLost: $hasLost");
+      notifyListeners();
+    }
 
-      }
-
-      //game.gameState.evaluate();
-      //TODO: if the collision is a fireball, player loses regardless
+    //game.gameState.evaluate();
     super.onCollision(intersectionPoints, other);
   }
 
@@ -313,6 +325,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   }
 
   void _jump(double dt) {
+    FlameAudio.play("jump.wav");
     velocity.y = -fJump;
     position.y += velocity.y * dt;
     jumped = false;

@@ -37,8 +37,6 @@ class MainMenuScreen extends StatelessWidget {
         squarishMainArea: Center(
           child: Transform.rotate(
             angle: -0.1,
-            //TODO: realign here to comply with the wireframe
-            //TODO: find a way to implement images
             child: const Text(
               'Boss Rush',
               textAlign: TextAlign.center,

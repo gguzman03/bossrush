@@ -35,8 +35,13 @@ class PlaySessionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final api = "5a75920ab7bd192bf92a40977af3b9f3";
-    final player = Player(); // Initialize the player here for simplicity
+    //universal player object that will be used throughout the game and determine win conditions
+    final player = Player();
     final startOfPlay = DateTime.now();
+    
+    var wm = WeatherManager(api);
+    var weather = wm.getWeather();
+    late BossRush game;
 
     return ChangeNotifierProvider(
       create: (context) => GameState(
@@ -47,17 +52,21 @@ class PlaySessionScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: palette.backgroundPlaySession,
         body: FutureBuilder<String>(
-          future: WeatherManager(api).getWeather(),
+          future: weather,
           builder: (context, snapshot) {
             late String weatherString;
-
             if (snapshot.connectionState != ConnectionState.done) {
-              return  Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                       Text("loading game :)")
-                    ],
+              return  Center(
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          Text(
+                            "loading game :)",
+                            style: TextStyle(fontFamily: "Permanent Marker", fontSize: 25, height:  1),)
+                        ],
+                    )
+
               );
             }
             if (snapshot.hasError || !snapshot.hasData) {
@@ -66,7 +75,7 @@ class PlaySessionScreen extends StatelessWidget {
               weatherString = snapshot.data!;
             }
 
-            final game = BossRush(weatherString, context.read<GameState>());
+            game = BossRush(weatherString, context.read<GameState>());
 
             return Stack(
               children: [
@@ -119,6 +128,8 @@ class PlaySessionScreen extends StatelessWidget {
   }
 }
 
+
+//Formerly Stateful Widget, which incorporated celebration confetti
 
 // /// This widget defines the entirety of the screen that the player sees when
 // /// they are playing a level.
